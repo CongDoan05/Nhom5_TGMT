@@ -30,31 +30,47 @@ def add_muoi_tieu(img, ratio=0.02):
 
 if __name__ == "__main__":
 
-    img = cv.imread("ttt.jpg", cv.IMREAD_COLOR)
+    img = cv.imread("giaothong.jpg", cv.IMREAD_COLOR)
     img2 = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    
+    clean_img = cv.medianBlur(img2,5)
+    cv.imshow("clean_img", clean_img)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
        
-    edge = cv.Canny(img2, 50, 150)
+    edge = cv.Canny(clean_img, 50, 150)
     cv.imshow("edge", edge)
     cv.waitKey(0)
     cv.destroyAllWindows()
-    w,h = edge.shape
+    
+    h,w = edge.shape
     mask = np.zeros_like(edge)
-    polygon = np.array([[0,h],[w,h],[w// 2 -50, h//2],[w//2 +50,h]], dtype=np.int32)
+    polygon = np.array([
+    [0, h],
+    [w, h],
+    [int(w*0.6), int(h*0.6)],
+    [int(w*0.4), int(h*0.6)]
+], dtype=np.int32)
+
     cv.fillPoly(mask, [polygon], 255)
     roi = cv.bitwise_and(edge, mask)
     cv.imshow("roi", roi)
     cv.waitKey(0)
     cv.destroyAllWindows()
     
+    
+   
+
+    
     lines = cv.HoughLinesP(
         roi,
         rho=1.0,
         theta=np.pi / 180,
-        threshold=50,
-        minLineLength=50,
+        threshold=100,
+        minLineLength=100,
         maxLineGap=100
     )
-    img_lines = img.copy()
+    img_lines = clean_img.copy()
     if lines is not None:
         for line in lines:
             x1, y1, x2, y2 = line[0]
