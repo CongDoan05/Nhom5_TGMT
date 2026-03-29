@@ -1,2 +1,2 @@
 # đây là thị giác máy tính
-# thêm phânf xử lý ảnh à băng chuyền
+# thêm phần xử lý ảnh và băng chuyền
